@@ -5,9 +5,9 @@
 		#include "log.h"
 	#endif
 
-	void t_logger_fn(const char *file, int line, const char *format, va_list args);
+	void t_log_adapter_fn(const char *file, int line, const char *format, va_list args);
 
-	char *t_logger_copy_messages();
-	void t_logger_clear_messages();
+	char *t_log_adapter_copy_messages();
+	void t_log_adapter_clear_messages();
 
 #endif

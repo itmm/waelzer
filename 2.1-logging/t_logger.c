@@ -6,7 +6,7 @@
 
 static char *messages = NULL;
 
-void t_logger_fn(const char *file, int line, const char *format, va_list args) {
+void t_log_adapter_fn(const char *file, int line, const char *format, va_list args) {
 	static char buffer[100];
 	vsnprintf(buffer, sizeof(buffer), format, args);
 	buffer[sizeof(buffer) - 1] = 0;
@@ -21,14 +21,14 @@ void t_logger_fn(const char *file, int line, const char *format, va_list args) {
 	messages = result;
 }
 
-char *t_logger_copy_messages() {
+char *t_log_adapter_copy_messages() {
 	char *src = messages ? : "";
 	char *result = malloc(strlen(src) + 1);
 	if (result) { strcpy(result, src); }
 	return result;
 }
 
-void t_logger_clear_messages() {
+void t_log_adapter_clear_messages() {
 	if (messages) {
 		free(messages);
 		messages = NULL;

@@ -1,75 +1,64 @@
 #include "book_order.h"
 
 #include "../2.1-logging/log.h"
+#include "../2.1-logging/unit.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void run_test(int count, char *test_case[], char *expected[]) {
-	if (!book_order(count, test_case)) {
-		fprintf(stderr, "book_order failed\n");
-		exit(EXIT_FAILURE);
-	}
+void assert_test(int count, char *test_case[], char *expected[]) {
+	assert_true(book_order(count, test_case), "book_order failed");
 
 	for (int i = 0; i < count; ++i) {
-		if (strcmp(test_case[i], expected[i])) {
-			fprintf(stderr, "entry %d does not match '%s' != '%s'\n", i, test_case[i], expected[i]);
-			exit(EXIT_FAILURE);
-		}
+		assert_true(
+			!strcmp(test_case[i], expected[i]), 
+			"entry %d does not match '%s' != '%s'", i, test_case[i], expected[i]
+		);
 	}
-	putchar('.');
 }
 
-void t_simple() {
+void t_simple(void *context) {
 	char *test_case[] = { "1.1-d", "3-ab", "2-x" };
 	char *expected[] = { "3-ab", "2-x", "1.1-d" };
-	run_test(sizeof(test_case)/sizeof(char *), test_case, expected);
+	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 
-void t_big_nums() {
+void t_big_nums(void *context) {
 	char *test_case[] = { "2-b", "10-a" };
 	char *expected[] = { "10-a", "2-b" };
-	run_test(sizeof(test_case)/sizeof(char *), test_case, expected);
+	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 
-void t_inner_counting() {
+void t_inner_counting(void *context) {
 	char *test_case[] = { "1.2", "1.10" };
 	char *expected[] = { "1.10", "1.2" };
-	run_test(sizeof(test_case)/sizeof(char *), test_case, expected);
+	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 
-void t_empty() {
-	run_test(0, NULL, NULL);
+void t_empty(void *context) {
+	assert_test(0, NULL, NULL);
 }
 
-void t_null_failure() {
-	log_fn original = set_logger(NULL);
-	if (book_order(1, NULL)) {
-		fprintf(stderr, "book_order should fail\n");
-		exit(EXIT_FAILURE);
-	}
-	set_logger(original);
-	putchar('.');
+void t_null_failure(void *context) {
+	log_adapter_fn original = disable_logging();
+	assert_true(!book_order(1, NULL), "book_order should fail");
+	set_log_adapter(original);
 }
 
-void t_negative_count_failure() {
-	log_fn original = set_logger(NULL);
+void t_negative_count_failure(void *context) {
+	log_adapter_fn original = disable_logging();
 	char *test_case[] = { "1.2" };
-	if (book_order(-1, test_case)) {
-		fprintf(stderr, "book_order should fail\n");
-		exit(EXIT_FAILURE);
-	}
-	set_logger(original);
-	putchar('.');
+	assert_true(!book_order(-1, test_case), "book_order should fail");
+	set_log_adapter(original);
 }
 
 int main(int argc, char **argv) {
-	t_simple();
-	t_big_nums();
-	t_inner_counting();
-	t_empty();
-	t_null_failure();
-	t_negative_count_failure();
-	puts("\nok");
+	run_test(t_simple, NULL);
+	run_test(t_big_nums, NULL);
+	run_test(t_inner_counting, NULL);
+	run_test(t_empty, NULL);
+	run_test(t_null_failure, NULL);
+	run_test(t_negative_count_failure, NULL);
+	unit_summary();
 }
