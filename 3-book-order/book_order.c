@@ -1,5 +1,7 @@
 #include "book_order.h"
 
+#include "../2.1-logging/log.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,15 +28,9 @@ static int _comparator(const void *a, const void *b) {
 }
 
 bool book_order(int entries_count, char **entries) {
-	if (entries_count < 0) {
-		fprintf(stderr, "%s:%d entries_count %d < 0\n", __FILE__, __LINE__, entries_count);
-		return false;
-	} else if (entries_count == 0) {
-		return true;
-	} else if (!entries) {
-		fprintf(stderr, "%s:%d entries not set\n", __FILE__, __LINE__);
-		return false;
-	}
+	return_unless(entries_count >= 0, false, "entries count %d < 0", entries_count);
+	if (entries_count == 0) { return true; }
+	return_unless(entries, false, "entries not set");
 
 	qsort(entries, entries_count, sizeof(char *), _comparator);
 

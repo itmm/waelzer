@@ -4,4 +4,4 @@ all: test
 clean:
 	rm *.o test
 
-test: test.o book_order.o
+test: test.o log.o t_logger.o

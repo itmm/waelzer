@@ -1,5 +1,7 @@
 #include "book_order.h"
 
+#include "../2.1-logging/log.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,10 +43,33 @@ void t_empty() {
 	run_test(0, NULL, NULL);
 }
 
+void t_null_failure() {
+	log_fn original = set_logger(NULL);
+	if (book_order(1, NULL)) {
+		fprintf(stderr, "book_order should fail\n");
+		exit(EXIT_FAILURE);
+	}
+	set_logger(original);
+	putchar('.');
+}
+
+void t_negative_count_failure() {
+	log_fn original = set_logger(NULL);
+	char *test_case[] = { "1.2" };
+	if (book_order(-1, test_case)) {
+		fprintf(stderr, "book_order should fail\n");
+		exit(EXIT_FAILURE);
+	}
+	set_logger(original);
+	putchar('.');
+}
+
 int main(int argc, char **argv) {
 	t_simple();
 	t_big_nums();
 	t_inner_counting();
 	t_empty();
+	t_null_failure();
+	t_negative_count_failure();
 	puts("\nok");
 }
