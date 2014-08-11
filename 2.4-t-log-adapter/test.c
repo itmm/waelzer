@@ -1,6 +1,7 @@
-#include "log.h"
 #include "t_logger.h"
-#include "unit.h"
+
+#include "../2.2-unit-tests/unit.h"
+#include "../2.3-strings/str.h"
 
 #include <string.h>
 
@@ -14,7 +15,7 @@ static void *setup(void *context) {
 void assert_messages(const char *expected) {
 	char *messages = t_log_adapter_copy_messages();
 	assert_true(!strcmp(messages, expected), "messages differ: '%s' != '%s'", messages, expected);
-	free(messages);
+	str_free(messages);
 }
 
 void t_simple(void *context) {

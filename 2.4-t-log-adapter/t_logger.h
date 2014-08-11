@@ -2,7 +2,7 @@
 #define t_logger_h
 
 	#if !defined(log_h)
-		#include "log.h"
+		#include "../2.1-logging/log.h"
 	#endif
 
 	void t_log_adapter_fn(const char *file, int line, const char *format, va_list args);

@@ -2,9 +2,10 @@
 #define unit_h
 
 	#include <stdbool.h>
+	#include <stdio.h>
 
 	#if !defined(log_h)
-		#include "log.h"
+		#include "../2.1-logging/log.h"
 	#endif
 
 	typedef void (*test_fn)(void *context);

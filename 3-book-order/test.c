@@ -1,10 +1,8 @@
 #include "book_order.h"
 
 #include "../2.1-logging/log.h"
-#include "../2.1-logging/unit.h"
+#include "../2.2-unit-tests/unit.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 void assert_test(int count, char *test_case[], char *expected[]) {

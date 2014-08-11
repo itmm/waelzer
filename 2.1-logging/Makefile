@@ -1,7 +1,9 @@
-all: test
-	./test
+all: only
+
+only: main
+	./main
 
 clean:
-	rm *.o test
+	rm *.o main
 
-test: test.o log.o unit.o t_logger.o
+main: main.o log.o
