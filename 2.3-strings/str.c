@@ -2,32 +2,44 @@
 
 #include "../2.1-logging/log.h"
 
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
 static char empty[1] = { 0 };
 
-char *str_cons(int count, const char *strs[count]) {
+char *str_cons(int count, ...) {
+	return_unless(count >= 0, empty, "count must not be negative");
 	if (!count) { return empty; }
 
-	size_t length = 0;
-	const char **current;
-	int i;
+	va_list args1;
+	va_list args2;
+	va_start(args1, count);
+	va_copy(args2, args1);
 
-	for (current = strs, i = count; i; --i, ++current) {
-		if (*current) length += strlen(*current);
+	size_t length = 0;
+
+	for (int i = count; i; --i) {
+		const char *current = va_arg(args1, const char *);
+		if (current) length += strlen(current);
 	}
+	va_end(args1);
 
 	char *result = malloc(length + 1);
-	return_unless(result, empty, "Can't alloc result string");
+	if (!result) {
+		va_end(args2);
+		return_unless(false, empty, "Can't alloc result string");
+	}
 
 	char *tail = result;
-	for (current = strs, i = count; i; --i, ++current) {
-		size_t len = *current ? strlen(*current) : 0;
-		memcpy(tail, *current, len);
+	for (int i = count; i; --i) {
+		const char *current = va_arg(args2, const char *);
+		size_t len = current ? strlen(current) : 0;
+		memcpy(tail, current, len);
 		tail += len;
 	}
 	*tail = 0;
+	va_end(args2);
 
 	return result;
 }

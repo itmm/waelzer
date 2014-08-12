@@ -26,5 +26,7 @@
 			} \
 		} while(false)
 
+	#define assert_str(a, b) assert_true(!strcmp(a, b), "strings not equal \"%s\" != \"%s\"")
+
 	void _exit_from_test();
 #endif

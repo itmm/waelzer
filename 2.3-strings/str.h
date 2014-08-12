@@ -3,7 +3,7 @@
 
 	#include <stdbool.h>
 
-	char *str_cons(int count, const char *strs[count]);
+	char *str_cons(int count, ...);
 	char *str_free(char *str);
 	char *str_empty();
 

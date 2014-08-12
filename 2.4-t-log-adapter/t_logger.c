@@ -12,14 +12,14 @@ void t_log_adapter_fn(const char *file, int line, const char *format, va_list ar
 	static char buffer[100];
 	vsnprintf(buffer, sizeof(buffer), format, args);
 	buffer[sizeof(buffer) - 1] = 0;
-	char *split = messages ? "\n" : NULL;
-	char *result = str_cons(3, (const char*[]) { messages, split, buffer });
+	char *split = str_is_empty(messages) ? NULL : "\n";
+	char *result = str_cons(3, messages, split, buffer);
 	str_free(messages);
 	messages = result;
 }
 
 char *t_log_adapter_copy_messages() {
-	return str_cons(1, (const char*[]) { messages });
+	return str_cons(1, messages);
 }
 
 void t_log_adapter_clear_messages() {
