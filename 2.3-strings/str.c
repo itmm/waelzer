@@ -5,8 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+static char empty[1] = { 0 };
+
 char *str_cons(int count, const char *strs[count]) {
-	if (!count) { return NULL; }
+	if (!count) { return empty; }
 
 	size_t length = 0;
 	const char **current;
@@ -17,7 +19,7 @@ char *str_cons(int count, const char *strs[count]) {
 	}
 
 	char *result = malloc(length + 1);
-	return_unless(result, NULL, "Can't alloc result string");
+	return_unless(result, empty, "Can't alloc result string");
 
 	char *tail = result;
 	for (current = strs, i = count; i; --i, ++current) {
@@ -30,8 +32,16 @@ char *str_cons(int count, const char *strs[count]) {
 	return result;
 }
 
+bool str_is_empty(const char *str) {
+	return !str || str == empty;
+}
+
 char *str_free(char *str) {
-	if (str) free(str);
-	return NULL;
+	if (!str_is_empty(str)) free(str);
+	return empty;
+}
+
+char *str_empty() {
+	return empty;
 }
 

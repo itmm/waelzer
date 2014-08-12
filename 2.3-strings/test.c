@@ -11,7 +11,17 @@ void t_simple(void *context) {
 	str_free(result);
 }
 
+void t_free_NULL(void *context) {
+	str_free(NULL);
+}
+
+void t_free_empty(void *context) {
+	str_free(str_empty());
+}
+
 int main(int argc, char **argv) {
 	run_test(t_simple, NULL);
+	run_test(t_free_NULL, NULL);
+	run_test(t_free_empty, NULL);
 	unit_summary();
 }
