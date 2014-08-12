@@ -1,1 +1,9 @@
+title.md
+what_we_need.c
+get_list_of_files.c
+get_list_from_content.c
+get_files_from_dir.c
+get_files_from_dir_helper.c
+main.c
+process_file.c
 build_markdown.c
