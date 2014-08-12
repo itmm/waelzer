@@ -3,8 +3,6 @@
 #include "../2.2-unit-tests/unit.h"
 #include "../2.3-strings/str.h"
 
-#include <string.h>
-
 static log_adapter_fn original_adapter;
 
 static void *setup(void *context) {
@@ -14,7 +12,7 @@ static void *setup(void *context) {
 
 void assert_messages(const char *expected) {
 	char *messages = t_log_adapter_copy_messages();
-	assert_true(!strcmp(messages, expected), "messages differ: '%s' != '%s'", messages, expected);
+	assert_str(messages, expected);
 	str_free(messages);
 }
 

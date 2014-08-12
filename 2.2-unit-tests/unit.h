@@ -3,6 +3,7 @@
 
 	#include <stdbool.h>
 	#include <stdio.h>
+	#include <string.h>
 
 	#if !defined(log_h)
 		#include "../2.1-logging/log.h"
