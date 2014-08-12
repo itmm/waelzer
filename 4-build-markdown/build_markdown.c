@@ -34,12 +34,17 @@ str_lst *get_list_from_content() {
 	return result;;
 }
 
-bool has_suffix(struct dirent *entry, const char *suffix) {
+static bool entry_matches(struct dirent *entry, const char *name) {
+	size_t length = strlen(name);
+	return entry->d_namlen == length && !strcmp(entry->d_name, name);
+}
+
+static bool has_suffix(struct dirent *entry, const char *suffix) {
 	size_t length = strlen(suffix);
 	return entry->d_namlen >= length && !strcmp(entry->d_name + entry->d_namlen - length, suffix);
 }
 
-int reverse_strcmp(char *a, char *b) {
+static int reverse_strcmp(char *a, char *b) {
 	return -strcmp(a, b);
 }
 
@@ -56,6 +61,7 @@ str_lst *get_list_from_dir() {
 	struct dirent *entry;
 	while ((entry = readdir(dir))) {
 		if (entry->d_namlen > 0 && entry->d_name[0] == '.') { continue; }
+		if (entry_matches(entry, "README.md")) { continue; }
 		if (has_suffix(entry, ".h") || has_suffix(entry, ".c") || has_suffix(entry, ".md")) {
 			if (!str_lst_add(result, entry->d_name)) {
 				str_lst_free(result);
