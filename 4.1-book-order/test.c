@@ -1,18 +1,19 @@
 #include "book_order.h"
 
-#include "../2.1-logging/log.h"
 #include "../2.2-unit-tests/unit.h"
-
-#include <string.h>
+#include "../2.4-string-list/str_lst.h"
 
 void assert_test(int count, char *test_case[], char *expected[]) {
-	assert_true(book_order(count, test_case), "book_order failed");
+	str_lst *lst = str_lst_create(count);
+	char **cur = test_case;
+	for (int i = count; i; --i) { str_lst_add(lst, *cur++); }
 
-	for (int i = 0; i < count; ++i) {
-		assert_true(
-			!strcmp(test_case[i], expected[i]), 
-			"entry %d does not match '%s' != '%s'", i, test_case[i], expected[i]
-		);
+	assert_true(book_order(lst), "book_order failed");
+
+	cur = str_lst_begin(lst);
+	char **exp = expected;
+	for (int i = count; i; --i) {
+		assert_str(*cur++, *exp++);
 	}
 }
 
@@ -40,14 +41,7 @@ void t_empty(void *context) {
 
 void t_null_failure(void *context) {
 	log_adapter_fn original = disable_logging();
-	assert_true(!book_order(1, NULL), "book_order should fail");
-	set_log_adapter(original);
-}
-
-void t_negative_count_failure(void *context) {
-	log_adapter_fn original = disable_logging();
-	char *test_case[] = { "1.2" };
-	assert_true(!book_order(-1, test_case), "book_order should fail");
+	assert_true(!book_order(NULL), "book_order should fail");
 	set_log_adapter(original);
 }
 
@@ -57,6 +51,5 @@ int main(int argc, char **argv) {
 	run_test(t_inner_counting, NULL);
 	run_test(t_empty, NULL);
 	run_test(t_null_failure, NULL);
-	run_test(t_negative_count_failure, NULL);
 	unit_summary();
 }

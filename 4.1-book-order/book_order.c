@@ -27,12 +27,12 @@ static int _comparator(const void *a, const void *b) {
 	return -strcmp(as, bs);
 }
 
-bool book_order(int entries_count, char **entries) {
-	return_unless(entries_count >= 0, false, "entries count %d < 0", entries_count);
-	if (entries_count == 0) { return true; }
-	return_unless(entries, false, "entries not set");
+bool book_order(str_lst *strs) {
+	return_unless(strs, false, "no string list");
+	int count = str_lst_count(strs);
+	if (count == 0) { return true; }
 
-	qsort(entries, entries_count, sizeof(char *), _comparator);
+	qsort(str_lst_begin(strs), count, sizeof(char *), _comparator);
 
 	return true;
 }
