@@ -6,6 +6,9 @@ all: only
 only: test
 	./test
 
+doc:
+	../3-build-markdown/build_markdown
+
 clean:
 	make -C ../2.3-strings/ clean
 	rm *.o test

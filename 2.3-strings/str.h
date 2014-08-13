@@ -18,6 +18,10 @@ You can check, if a string is `NULL` or the special empty string.
 /*>
 A new free function for strings handles gracefully the cases of `NULL`
 and the special empty string (which also must not be freed).
+
+This function returns a value to the empty string, so we can assign
+the variable that we free with an empty default by assigning it the
+value of this function.
 <*/
 	char *str_free(char *str);
 
