@@ -19,7 +19,7 @@ list needs `str.h`, but we don't use it directly here, so we
 wont include it.
 ``` c
 #include "../2.1-logging/log.h"
-#include "../2.5-string-list/str_lst.h"
+#include "../2.4-string-list/str_lst.h"
 ```
 The system headers are good old friends, with the exception
 of `dirent.h`. We use it to parse the directory, if `content.txt`

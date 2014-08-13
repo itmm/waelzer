@@ -4,16 +4,21 @@
 #include "../2.3-strings/str.h"
 
 static log_adapter_fn original_adapter;
+static char *messages;
 
 static void *setup(void *context) {
 	t_log_adapter_clear_messages();
+	messages = str_empty();
 	return context;
 }
 
+static void teardown(void *context) {
+	messages = str_free(messages);
+}
+
 void assert_messages(const char *expected) {
-	char *messages = t_log_adapter_copy_messages();
+	messages = t_log_adapter_copy_messages();
 	assert_str(messages, expected);
-	str_free(messages);
 }
 
 void t_simple(void *context) {
@@ -28,8 +33,8 @@ void t_empty(void *context) {
 
 int main(int argc, char **argv) {
 	original_adapter = set_log_adapter(t_log_adapter_fn);
-	run_test_ex(t_simple, NULL, setup, NULL);
-	run_test_ex(t_empty, NULL, setup, NULL);
+	run_test_ex(t_simple, NULL, setup, teardown);
+	run_test_ex(t_empty, NULL, setup, teardown);
 	set_log_adapter(original_adapter);
 	t_log_adapter_clear_messages();
 	unit_summary();
