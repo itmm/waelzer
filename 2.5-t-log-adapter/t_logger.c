@@ -1,28 +1,45 @@
+/*>
+## Implementation
+
+We need to include some headers and declare a static variable for the string list.
+<*/
 #include "t_logger.h"
 
-#include "../2.3-strings/str.h"
+#include "../2.4-string-list/str_lst.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-static char *messages = NULL;
+static str_lst *messages = NULL;
+/*>
+### Log Adapter
 
+The log adapter stores the message in a buffer, creates the string list lazyly and
+adds the string.
+<*/
 void t_log_adapter_fn(const char *file, int line, const char *format, va_list args) {
 	static char buffer[100];
 	vsnprintf(buffer, sizeof(buffer), format, args);
 	buffer[sizeof(buffer) - 1] = 0;
-	char *split = str_is_empty(messages) ? NULL : "\n";
-	char *result = str_cons(3, messages, split, buffer);
-	str_free(messages);
-	messages = result;
+	if (!messages) {
+		messages = str_lst_create(1);
+		return_unless(messages, , "can't allocate list");
+	}
+	str_lst_add(messages, buffer);
 }
+/*>
+### String List handling
 
-char *t_log_adapter_copy_messages() {
-	return str_cons(1, messages);
+You can access the string list directly.
+<*/
+str_lst *t_log_adapter_get_messages() {
+	return messages;
 }
-
+/*>
+The clear function deletes the string list, so that no heap memory will be used.
+<*/
 void t_log_adapter_clear_messages() {
-	messages = str_free(messages);
+	str_lst_free(messages);
+	messages = NULL;
 }
 

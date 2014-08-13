@@ -1,4 +1,5 @@
 all: only
+	make -C ../2.4-string-list/ only
 	make -C ../2.3-strings/ only
 	make -C ../2.2-unit-tests/ only
 	make -C ../2.1-logging/ only
@@ -6,8 +7,11 @@ all: only
 only: test
 	./test
 
+doc:
+	../3-build-markdown/build_markdown
+	
 clean:
-	make -C ../2.3-strings/ clean
+	make -C ../2.4-string-list/ clean
 	rm *.o test
 
-test: test.o t_logger.o ../2.3-strings/str.o ../2.2-unit-tests/unit.o ../2.1-logging/log.o
+test: test.o t_logger.o ../2.4-string-list/str_lst.o ../2.3-strings/str.o ../2.2-unit-tests/unit.o ../2.1-logging/log.o
