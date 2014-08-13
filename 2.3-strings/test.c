@@ -1,41 +1,60 @@
+/*>
+## Unit-Tests
+
+We need some headers.
+<*/
 #include "str.h"
 
 #include "../2.2-unit-tests/unit.h"
-
-#include <string.h>
-
+/*>
+### Concatenation tests
+#### Can we concatenate a couple of strings?
+<*/
 void t_simple(void *context) {
 	char *result = str_cons(3, "a", "b", "c");
 	assert_str(result, "abc");
 	str_free(result);
 }
-
+/*>
+#### Even if some entries are `NULL`?
+<*/
 void t_null_entries(void *context) {
 	char *result = str_cons(5, "a", NULL, "b", NULL, "c");
 	assert_str(result, "abc");
 	str_free(result);
 }
-
+/*>
+#### How about zero entries?
+<*/
 void t_empty(void *context) {
 	char *result = str_cons(0);
 	assert_str(result, "");
 	str_free(result);
 }
-
+/*>
+#### Or only one `NULL` entry?
+<*/
 void t_only_NULL(void *context) {
 	char *result = str_cons(1, NULL);
 	assert_str(result, "");
 	str_free(result);
 }
-
+/*>
+### Freeing tests
+#### Can we free `NULL`?
+<*/
 void t_free_NULL(void *context) {
 	str_free(NULL);
 }
-
+/*>
+#### Or the empty string?
+<*/
 void t_free_empty(void *context) {
 	str_free(str_empty());
 }
-
+/*>
+### Setup
+<*/
 int main(int argc, char **argv) {
 	run_test(t_simple, NULL);
 	run_test(t_null_entries, NULL);

@@ -4,6 +4,9 @@ all: only
 only: test
 	./test
 
+doc:
+	../4-build-markdown/build_markdown
+
 clean:
 	make -C ../2.1-logging clean
 	rm *.o test

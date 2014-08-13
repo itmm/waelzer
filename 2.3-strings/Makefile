@@ -5,6 +5,9 @@ all: only
 only: test
 	./test
 
+doc:
+	../4-build-markdown/build_markdown
+
 clean:
 	make -C ../2.2-unit-tests/ clean
 	rm *.o test
