@@ -2,8 +2,8 @@
 # Find the Section Order
 
 All sections start with a sequence of numbers separated by dots followed by
-a hyphen. The order should be decreasing in the Number value, e.g.
-`10.3` before `10.2` before `2.6`.
+a hyphen. The order should compare by number, not by digit, e.g.
+`2.6` < `10.2` < `10.3`.
 
 ## Interface
 

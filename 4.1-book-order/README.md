@@ -1,8 +1,8 @@
 # Find the Section Order
 
 All sections start with a sequence of numbers separated by dots followed by
-a hyphen. The order should be decreasing in the Number value, e.g.
-`10.3` before `10.2` before `2.6`.
+a hyphen. The order should compare by number, not by digit, e.g.
+`2.6` < `10.2` < `10.3`.
 
 ## Interface
 
@@ -57,8 +57,8 @@ its number is zero.
 ```
 If the numbers are not equal, the comparison is done
 ``` c
-		if (an > bn) { return -1; }
-		else if (an < bn) { return 1; }
+		if (an < bn) { return -1; }
+		else if (an > bn) { return 1; }
 ```
 Otherwise eat dots and loop.
 ``` c
@@ -66,9 +66,9 @@ Otherwise eat dots and loop.
 		if (*bs == '.') { ++bs; }
 	}
 ```
-The rest of the strings are compared in reverse also.
+The rest of the strings are compared also.
 ``` c
-	return -strcmp(as, bs);
+	return strcmp(as, bs);
 }
 ```
 ### Ordering the strings
@@ -117,23 +117,23 @@ void assert_test(int count, char *test_case[], char *expected[]) {
 ``` c
 void t_simple(void *context) {
 	char *test_case[] = { "1.1-d", "3-ab", "2-x" };
-	char *expected[] = { "3-ab", "2-x", "1.1-d" };
+	char *expected[] = { "1.1-d", "2-x", "3-ab" };
 	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 ```
 #### Test order with two digit number
 ``` c
 void t_big_nums(void *context) {
-	char *test_case[] = { "2-b", "10-a" };
-	char *expected[] = { "10-a", "2-b" };
+	char *test_case[] = { "10-a", "2-b" };
+	char *expected[] = { "2-b", "10-a" };
 	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 ```
 #### Test order on second number
 ``` c
 void t_inner_counting(void *context) {
-	char *test_case[] = { "1.2", "1.10" };
-	char *expected[] = { "1.10", "1.2" };
+	char *test_case[] = { "1.10", "1.2" };
+	char *expected[] = { "1.2", "1.10" };
 	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 ```

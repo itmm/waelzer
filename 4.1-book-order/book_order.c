@@ -35,8 +35,8 @@ its number is zero.
 /*>
 If the numbers are not equal, the comparison is done
 <*/
-		if (an > bn) { return -1; }
-		else if (an < bn) { return 1; }
+		if (an < bn) { return -1; }
+		else if (an > bn) { return 1; }
 /*>
 Otherwise eat dots and loop.
 <*/
@@ -44,9 +44,9 @@ Otherwise eat dots and loop.
 		if (*bs == '.') { ++bs; }
 	}
 /*>
-The rest of the strings are compared in reverse also.
+The rest of the strings are compared also.
 <*/
-	return -strcmp(as, bs);
+	return strcmp(as, bs);
 }
 /*>
 ### Ordering the strings

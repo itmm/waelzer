@@ -31,23 +31,23 @@ void assert_test(int count, char *test_case[], char *expected[]) {
 <*/
 void t_simple(void *context) {
 	char *test_case[] = { "1.1-d", "3-ab", "2-x" };
-	char *expected[] = { "3-ab", "2-x", "1.1-d" };
+	char *expected[] = { "1.1-d", "2-x", "3-ab" };
 	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 /*>
 #### Test order with two digit number
 <*/
 void t_big_nums(void *context) {
-	char *test_case[] = { "2-b", "10-a" };
-	char *expected[] = { "10-a", "2-b" };
+	char *test_case[] = { "10-a", "2-b" };
+	char *expected[] = { "2-b", "10-a" };
 	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 /*>
 #### Test order on second number
 <*/
 void t_inner_counting(void *context) {
-	char *test_case[] = { "1.2", "1.10" };
-	char *expected[] = { "1.10", "1.2" };
+	char *test_case[] = { "1.10", "1.2" };
+	char *expected[] = { "1.2", "1.10" };
 	assert_test(sizeof(test_case)/sizeof(char *), test_case, expected);
 }
 /*>
