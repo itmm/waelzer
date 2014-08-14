@@ -8,7 +8,7 @@ only: test
 	./test
 
 doc:
-	../3-build-markdown/build_markdown
+	../bin/build_markdown
 	
 clean:
 	make -C ../2.4-string-list/ clean

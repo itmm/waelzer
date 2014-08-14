@@ -4,7 +4,7 @@ only: main
 	./main
 
 doc:
-	../3-build-markdown/build_markdown
+	../bin/build_markdown
 
 clean:
 	rm *.o main
