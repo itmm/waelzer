@@ -7,6 +7,9 @@ all: only
 only: test
 	./test
 
+doc:
+	../3-build-markdown/build_markdown
+
 clean:
 	make -C ../2.4-string-list/ clean
 	rm *.o test
