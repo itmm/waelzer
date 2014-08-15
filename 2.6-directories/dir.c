@@ -2,7 +2,33 @@
 
 #include "../2.1-logging/log.h"
 
+#include <errno.h>
 #include <string.h>
+
+str_lst *dir_entries(const char *path, entry_filter_fn filter) {
+	DIR *dir = opendir(path);
+	return_unless(dir, NULL, "can't open dir: %s", strerror(errno));
+
+	str_lst *result = str_lst_create(0);
+	if (!result) {
+		closedir(dir);
+		return NULL;
+	}
+
+	struct dirent *entry;
+	while ((entry = readdir(dir))) {
+		if (!filter || filter(entry)) {
+			if (!str_lst_add(result, entry->d_name)) {
+				str_lst_free(result);
+				closedir(dir);
+				return NULL;
+			}
+		}
+	}
+
+	closedir(dir);
+	return result;
+}
 
 bool dir_entry_is(struct dirent *entry, const char *str) {
 	return_unless(entry, false, "entry is NULL");

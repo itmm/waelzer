@@ -8,7 +8,7 @@
 
 	typedef bool (*entry_filter_fn)(struct dirent *entry);
 
-	str_lst dir_entries(const char *path, entry_filter_fn filter);
+	str_lst *dir_entries(const char *path, entry_filter_fn filter);
 
 	bool dir_entry_is(struct dirent *entry, const char *str);
 	bool dir_entry_has_prefix(struct dirent *entry, const char *prefix);
