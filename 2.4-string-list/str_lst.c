@@ -17,7 +17,7 @@ First we need a couple of headers and declare the `MIN` and `MAX` macros (yes, w
 
 The `str_lst` contains three pointers:
 
-* `begin` points to the begin of the list,
+* `begin` points to the beginning of the list,
 * `end` points behind the last added element,
 * `capacity` points behind the last allocated entry.
 
@@ -31,9 +31,7 @@ struct str_lst {
 /*>
 ### Creating a new list
 
-The constructor allocates two chunks of memory: for the list structure
-itself and to store the string pointers. The minimum capacity is adjusted
-to a sensible size.
+The constructor allocates two chunks of memory: for the list structure itself and to store the string pointers. The minimum capacity is adjusted to a sensible size.
 <*/
 str_lst *str_lst_create(int min_capacity) {
 	int capacity = MAX(min_capacity, 8);
@@ -52,8 +50,7 @@ str_lst *str_lst_create(int min_capacity) {
 /*>
 ### Free the list
 
-First every string stored in the list is freed. Then the buffer is freed.
-And lastly the list is freed.
+First every string stored in the list is freed. Then the buffer is freed.  And lastly the list is freed.
 <*/
 void str_lst_free(str_lst *sl) {
 	if (!sl) { return; }
@@ -86,20 +83,15 @@ char **str_lst_end(str_lst *sl) {
 /*>
 ### Adding Strings
 
-The convenience function duplicates the string and calls
-the consuming function.
+The convenience function duplicates the string and calls the consuming function.
 <*/
 bool str_lst_add(str_lst *sl, const char *str) {
 	return str_lst_add_and_consume(sl, str_cons(1, str));
 }
 /*>
-In the consuming function we do the heavy lifting, if the
-capacity is exceeded. Then we double the capacity until we
-grow so big, that we switch to a linear growth.
+In the consuming function we do the heavy lifting, if the capacity is exceeded. Then we double the capacity until we grow so big, that we switch to a linear growth.
 
-We reallocate the buffer for the new size, adjust the pointers
-and add the element. If we can't reallocate the buffer, nothing
-will be changed.
+We reallocate the buffer for the new size, adjust the pointers and add the element. If we can't reallocate the buffer, nothing will be changed.
 <*/
 bool str_lst_add_and_consume(str_lst *sl, char *str) {
 	return_unless(sl, false, "no list");

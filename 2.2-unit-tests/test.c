@@ -1,11 +1,9 @@
 /*>
 # Unit-Tests
 
-I love test-driven development, but it is hard to achieve. The most important part, 
-is the testing framework. Here we use a very minimal framework, just for this project.
+I love test-driven development, but it is hard to achieve. The most important part, is the testing framework. Here we use a very minimal framework, just for this project.
 
-Each test is a function, that can get a context passed along. There are setup and 
-tear down functions that can be invoked before and after any test.
+Each test is a function, that can get a context passed along. There are setup and tear down functions that can be invoked before and after any test.
 
 If the test fails, we jump out of the test and continue with the next test.
 

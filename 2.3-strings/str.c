@@ -11,17 +11,13 @@ First we need a couple of headers.
 #include <stdlib.h>
 #include <string.h>
 /*>
-The special empty string contains just one byte: the null terminator. We
-don't treat any empty string as special. It must have the same address as
-the special empty string to qualify for special treatment.
+The special empty string contains just one byte: the null terminator. We don't treat any empty string as special. It must have the same address as the special empty string to qualify for special treatment.
 <*/
 static char empty[1] = { 0 };
 /*>
 ### Concatenating Strings
 
-To concatenate the strings, we build two `va_list` of the variable arguments.
-The first will be used to calculate the length of the resulting string. The
-second will be used in the copy phase.
+To concatenate the strings, we build two `va_list` of the variable arguments.  The first will be used to calculate the length of the resulting string. The second will be used in the copy phase.
 <*/
 char *str_cons(int count, ...) {
 	return_unless(count >= 0, empty, "count must not be negative");
@@ -32,8 +28,7 @@ char *str_cons(int count, ...) {
 	va_start(args1, count);
 	va_copy(args2, args1);
 /*>
-The calculation of the length is straight forward. We only have to watch out
-for `NULL` strings, that will be silently ignored.
+The calculation of the length is straight forward. We only have to watch out for `NULL` strings, that will be silently ignored.
 <*/
 	size_t length = 0;
 	for (int i = count; i; --i) {
@@ -50,8 +45,7 @@ The result buffer must be one byte bigger to store the terminating null byte.
 		return_unless(false, empty, "Can't alloc result string");
 	}
 /*>
-In the copy phase, we keep a pointer to the current end of the string and
-adavance it after each copy.
+In the copy phase, we keep a pointer to the current end of the string and advance it after each copy.
 <*/
 	char *tail = result;
 	for (int i = count; i; --i) {

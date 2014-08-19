@@ -1,8 +1,7 @@
 /*>
 ## Describing the Interface
 
-In this part we describe, how the logging framework can be used. Then we
-describe, how it is implemented. First we need some standard includes:
+In this part we describe, how the logging framework can be used. Then we describe, how it is implemented. First we need some standard includes:
 <*/
 #if !defined(log_h)
 #define log_h
@@ -10,10 +9,7 @@ describe, how it is implemented. First we need some standard includes:
 	#include <stdarg.h>
 	#include <stdbool.h>
 /*>
-The basic logging is done with the method `_do_log`, but this method is
-seldom called. It has the file name and line number as parameters.
-Most of the time it will be called by the `log` macro, that inserts these
-two parameters.
+The basic logging is done with the method `_do_log`, but this method is seldom called. It has the file name and line number as parameters. Most of the time it will be called by the `log` macro, that inserts these two parameters.
 
 Additional parameters can be provided as in the `printf` function.
 <*/
@@ -22,14 +18,9 @@ Additional parameters can be provided as in the `printf` function.
 /*>
 ### Fast function exit
 
-The `return_unless` macro has an additional `condition` and return `value`. 
-If the `condition` evaluates to `true`, nothing happens. If it is `false`, 
-the rest of the argument list will be used to form a log entry. After this 
-logging, `value` will be returned from the function. If the function is `void`, 
-you can leave `value` empty.
+The `return_unless` macro has an additional `condition` and return `value`.  If the `condition` evaluates to `true`, nothing happens. If it is `false`, the rest of the argument list will be used to form a log entry. After this logging, `value` will be returned from the function. If the function is `void`, you can leave `value` empty.
 
-This macro will be used in lots of functions to check the validity of the 
-current state or arguments.
+This macro will be used in lots of functions to check the validity of the current state or arguments.
 <*/
 	#define return_unless(condition, value, ...) do { \
 			if (!(condition)) { \
@@ -41,15 +32,13 @@ current state or arguments.
 /*>
 ### The Log Adapter
 
-I don't like the assert macro from C. It terminates the program. And I like the program to continue. I don't want to assure that everything is right, before I call a function and function validates again, that everything is right. DRY: Don't Repeat Yourself. And after all, it can be disabled in production code, so you still have to cope with the case of not crashing while doing so in the development environment.
+I don't like the `assert` macro from C. It terminates the program. And I like the program to continue. I don't want to assure that everything is right, before I call a function and function validates again, that everything is right. DRY: Don't Repeat Yourself. And after all, it can be disabled in production code, so you still have to cope with the case of not crashing while doing so in the development environment.
 
-I want that the function can be called with anything and if I inspect the return value, 
-maybe I even want to suppress the logging. But that is an action triggered by the called of a function.
+I want that the function can be called with anything and if I inspect the return value,  maybe I even want to suppress the logging. But that is an action triggered by the called of a function.
 
-To get this feature, there is a log adapter function, that is called by the `_do_log` function. It can be changed
-globally. The setter functions return the old log adapter to restore the old log behaviour.
+To get this feature, there is a log adapter function, that is called by the `_do_log` function. It can be changed globally. The setter functions return the old log adapter to restore the old log behavior.
 
-It is also possible to disable logging or reset the default behaviour.
+It is also possible to disable logging or reset the default behavior.
 <*/
 	typedef void (*log_adapter_fn)(const char *file, int line, const char *format, va_list args);
 

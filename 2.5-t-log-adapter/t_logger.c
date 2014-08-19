@@ -14,8 +14,7 @@ static str_lst *messages = NULL;
 /*>
 ### Log Adapter
 
-The log adapter stores the message in a buffer, creates the string list lazyly and
-adds the string.
+The log adapter stores the message in a buffer, creates the string list lazily and adds the string.
 <*/
 void t_log_adapter_fn(const char *file, int line, const char *format, va_list args) {
 	static char buffer[100];

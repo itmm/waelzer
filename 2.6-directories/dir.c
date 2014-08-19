@@ -24,8 +24,7 @@ str_lst *dir_entries(const char *path, entry_filter_fn filter) {
 		return NULL;
 	}
 /*>
-Now we iterate over the entries and add them to the result list,
-if the filter does not reject them.
+Now we iterate over the entries and add them to the result list, if the filter does not reject them.
 <*/
 	struct dirent *entry;
 	while ((entry = readdir(dir))) {
@@ -56,8 +55,7 @@ bool dir_entry_is(struct dirent *entry, const char *str) {
 /*>
 #### Compare a prefix
 
-A string is a prefix, if it is a substring starting at index
-position 0.
+A string is a prefix, if it is a substring starting at index position 0.
 <*/
 bool dir_entry_has_prefix(struct dirent *entry, const char *prefix) {
 	return_unless(entry, false, "entry is NULL");
@@ -67,8 +65,7 @@ bool dir_entry_has_prefix(struct dirent *entry, const char *prefix) {
 /*>
 #### Compare a suffix
 
-A string is a suffix, if it last bytes of the string are equal to
-the suffix.
+A string is a suffix, if it last bytes of the string are equal to the suffix.
 <*/
 bool dir_entry_has_suffix(struct dirent *entry, const char *suffix) {
 	return_unless(entry, false, "entry is NULL");

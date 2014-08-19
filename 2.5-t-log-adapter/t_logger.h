@@ -1,9 +1,7 @@
 /*>
 # Unit-Testing the Logger
 
-It took a bit to make unit-tests for the Logger functions. The reason was
-the string list, that stores every log message (without file and line number).
-We want to use this data structure, but to do that, it has to be present.
+It took a bit to make unit-tests for the Logger functions. The reason was the string list, that stores every log message (without file and line number).  We want to use this data structure, but to do that, it has to be present.
 
 ## Interface
 
@@ -21,8 +19,7 @@ Beside the headers, we declare a new log adapter, that records every log.
 
 	void t_log_adapter_fn(const char *file, int line, const char *format, va_list args);
 /*>
-To access the messages, we can use the accessor to the string list. To
-reset the messages, a special clear function is provided.
+To access the messages, we can use the accessor to the string list. To reset the messages, a special clear function is provided.
 <*/
 	str_lst *t_log_adapter_get_messages();
 	void t_log_adapter_clear_messages();

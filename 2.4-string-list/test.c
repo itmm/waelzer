@@ -1,7 +1,7 @@
 /*>
 ## Unit-Tests
 
-First we nee some headers.
+First we need some headers.
 <*/
 #include "str_lst.h"
 
@@ -12,8 +12,7 @@ First we nee some headers.
 /*>
 ### General setup
 
-The variable `sl` hold one list, that is managed by the `setup` and
-`teardown` functions.
+The variable `sl` hold one list, that is managed by the `setup` and `teardown` functions.
 <*/
 static str_lst *sl;
 

@@ -10,14 +10,13 @@ First we have some headers
 #include "../2.2-unit-tests/unit.h"
 #include "../2.3-strings/str.h"
 /*>
-A special tear down function will clear all messages
+A special tear down function will clear all messages:
 <*/
 static void teardown(void *context) {
 	t_log_adapter_clear_messages();
 }
 /*>
-The `assert_messages` function validates, that all messages are
-present, that are expected.
+The `assert_messages` function validates, that all messages are present, that are expected.
 <*/
 void assert_messages(int count, ...) {
 	str_lst *messages = t_log_adapter_get_messages();

@@ -35,13 +35,13 @@ If we have read a line of code, but are in MarkDown writing, we send a
 MarkDown command to switch to code.
 <*/
 			if (read_in_code && !write_in_code) {
-				fprintf(out, "``` c\n");
+				fprintf(out, "\n``` c\n");
 				write_in_code = true;
 /*>
 Likewise we switch back to MarkDown, if we are still in writing code.
 <*/
 			} else if (!read_in_code && write_in_code) {
-				fprintf(out, "```\n");
+				fprintf(out, "```\n\n");
 				write_in_code = false;
 			}
 			fprintf(out, "%s", buffer);
