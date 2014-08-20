@@ -20,10 +20,7 @@ static int _comparator(const void *a, const void *b) {
 	const char *as = *(const char **) a;
 	const char *bs = *(const char **) b;
 /*>
-While one of the strings has a digit at its current
-position, we read two numbers from the two strings and
-compare them (if one string doesn't start with a digit,
-its number is zero.
+While one of the strings has a digit at its current position, we read two numbers from the two strings and compare them (if one string doesn't start with a digit, its number is zero).
 <*/
 	while (isdigit(*as) || isdigit(*bs)) {
 		int an = 0;
@@ -51,7 +48,7 @@ The rest of the strings are compared also.
 /*>
 ### Ordering the strings
 
-The ordering is a simple call to quicksort with our new comparator.
+The ordering is a simple call to `qsort` with our new comparator.
 <*/
 bool book_order(str_lst *strs) {
 	return_unless(strs, false, "no string list");

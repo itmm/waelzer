@@ -1,6 +1,6 @@
 # Generating the MarkDown file
 
-In this section we will generate the MarkDown file `README.md`. The name is choosen, so it will be displayed directly in GitHub.
+In this section we will generate the MarkDown file `README.md`. The name is chosen, so it will be displayed directly in GitHub.
 
 Basically we do three interesting things:
 
