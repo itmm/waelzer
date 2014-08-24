@@ -38,7 +38,6 @@ str_lst *t_log_adapter_get_messages() {
 The clear function deletes the string list, so that no heap memory will be used.
 <*/
 void t_log_adapter_clear_messages() {
-	str_lst_free(messages);
-	messages = NULL;
+	messages = str_lst_free(messages);
 }
 
