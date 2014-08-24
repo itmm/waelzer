@@ -49,9 +49,11 @@ static char empty[1] = { 0 };
 
 ### Concatenating Strings
 
-To concatenate the strings, we build two `va_list` of the variable arguments.  The first will be used to calculate the length of the resulting string. The second will be used in the copy phase.
+To concatenate the strings, we build two `va_list` of the variable arguments.  The first will be used to calculate the length of the resulting string. The second will be used in the copy phase in the function `copy_args`.
 
 ``` c
+static void copy_args(char *result, int count, va_list args);
+
 char *str_cons(int count, ...) {
 	return_unless(count >= 0, empty, "count must not be negative");
 	if (!count) { return empty; }
@@ -77,31 +79,37 @@ The result buffer must be one byte bigger to store the terminating null byte.
 
 ``` c
 	char *result = malloc(length + 1);
-	if (!result) {
-		va_end(args2);
-		return_unless(false, empty, "Can't alloc result string");
-	}
 ```
 
-In the copy phase, we keep a pointer to the current end of the string and advance it after each copy.
+The `copy_args` function may throw an error. We put it in a different function, so we can free the second argument list, even, if an error is raised.
 
 ``` c
-	char *tail = result;
+	copy_args(result, count, args2);
+	va_end(args2);
+
+	return result ? : empty;
+}
+```
+
+In the copy phase, we copy the current argument and advance the pointer afterwards.
+
+``` c
+static void copy_args(char *result, int count, va_list args) {
+	return_unless(result,, "can't alloc result string");
+	return_unless(count >= 0,, "count must not be negative");
+
 	for (int i = count; i; --i) {
-		const char *current = va_arg(args2, const char *);
+		const char *current = va_arg(args, const char *);
 		size_t len = current ? strlen(current) : 0;
-		memcpy(tail, current, len);
-		tail += len;
+		memcpy(result, current, len);
+		result += len;
 	}
 ```
 
 Don't forget to add the terminating null byte.
 
 ``` c
-	*tail = 0;
-	va_end(args2);
-
-	return result;
+	*result = 0;
 }
 ```
 
@@ -141,44 +149,50 @@ We need some headers.
 #include "../2.2-unit-tests/unit.h"
 ```
 
+A special tear down function can be used to assure, that the memory of allocated strings is freed, even when the test failed.
+
+``` c
+static char *str = NULL;
+
+static void teardown(void *context) {
+	str = str_free(str);
+}
+```
+
 ### Concatenation tests
 #### Can we concatenate a couple of strings?
 
 ``` c
-void t_simple(void *context) {
+static void t_simple(void *context) {
 	char *result = str_cons(3, "a", "b", "c");
 	assert_str(result, "abc");
-	str_free(result);
 }
 ```
 
 #### Even if some entries are `NULL`?
 
 ``` c
-void t_null_entries(void *context) {
+static void t_null_entries(void *context) {
 	char *result = str_cons(5, "a", NULL, "b", NULL, "c");
 	assert_str(result, "abc");
-	str_free(result);
 }
 ```
 
 #### How about zero entries?
 
 ``` c
-void t_empty(void *context) {
+static void t_empty(void *context) {
 	char *result = str_cons(0);
 	assert_str(result, "");
-	str_free(result);
 }
 ```
 
 #### Or only one `NULL` entry?
 
 ``` c
-void t_only_NULL(void *context) {
+static void t_only_NULL(void *context) {
 	char *result = str_cons(1, NULL);
 	assert_str(result, "");
-	str_free(result);
 }
 ```
 
@@ -203,10 +217,10 @@ void t_free_empty(void *context) {
 
 ``` c
 int main(int argc, char **argv) {
-	run_test(t_simple, NULL);
-	run_test(t_null_entries, NULL);
-	run_test(t_empty, NULL);
-	run_test(t_only_NULL, NULL);
+	run_test_ex(t_simple, NULL, NULL, teardown);
+	run_test_ex(t_null_entries, NULL, NULL, teardown);
+	run_test_ex(t_empty, NULL, NULL, teardown);
+	run_test_ex(t_only_NULL, NULL, NULL, teardown);
 	run_test(t_free_NULL, NULL);
 	run_test(t_free_empty, NULL);
 	unit_summary();

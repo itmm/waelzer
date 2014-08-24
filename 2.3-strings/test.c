@@ -7,37 +7,41 @@ We need some headers.
 
 #include "../2.2-unit-tests/unit.h"
 /*>
+A special tear down function can be used to assure, that the memory of allocated strings is freed, even when the test failed.
+<*/
+static char *str = NULL;
+
+static void teardown(void *context) {
+	str = str_free(str);
+}
+/*>
 ### Concatenation tests
 #### Can we concatenate a couple of strings?
 <*/
-void t_simple(void *context) {
+static void t_simple(void *context) {
 	char *result = str_cons(3, "a", "b", "c");
 	assert_str(result, "abc");
-	str_free(result);
 }
 /*>
 #### Even if some entries are `NULL`?
 <*/
-void t_null_entries(void *context) {
+static void t_null_entries(void *context) {
 	char *result = str_cons(5, "a", NULL, "b", NULL, "c");
 	assert_str(result, "abc");
-	str_free(result);
 }
 /*>
 #### How about zero entries?
 <*/
-void t_empty(void *context) {
+static void t_empty(void *context) {
 	char *result = str_cons(0);
 	assert_str(result, "");
-	str_free(result);
 }
 /*>
 #### Or only one `NULL` entry?
 <*/
-void t_only_NULL(void *context) {
+static void t_only_NULL(void *context) {
 	char *result = str_cons(1, NULL);
 	assert_str(result, "");
-	str_free(result);
 }
 /*>
 ### Freeing tests
@@ -56,10 +60,10 @@ void t_free_empty(void *context) {
 ### Setup
 <*/
 int main(int argc, char **argv) {
-	run_test(t_simple, NULL);
-	run_test(t_null_entries, NULL);
-	run_test(t_empty, NULL);
-	run_test(t_only_NULL, NULL);
+	run_test_ex(t_simple, NULL, NULL, teardown);
+	run_test_ex(t_null_entries, NULL, NULL, teardown);
+	run_test_ex(t_empty, NULL, NULL, teardown);
+	run_test_ex(t_only_NULL, NULL, NULL, teardown);
 	run_test(t_free_NULL, NULL);
 	run_test(t_free_empty, NULL);
 	unit_summary();

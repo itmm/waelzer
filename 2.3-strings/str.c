@@ -17,8 +17,10 @@ static char empty[1] = { 0 };
 /*>
 ### Concatenating Strings
 
-To concatenate the strings, we build two `va_list` of the variable arguments.  The first will be used to calculate the length of the resulting string. The second will be used in the copy phase.
+To concatenate the strings, we build two `va_list` of the variable arguments.  The first will be used to calculate the length of the resulting string. The second will be used in the copy phase in the function `copy_args`.
 <*/
+static void copy_args(char *result, int count, va_list args);
+
 char *str_cons(int count, ...) {
 	return_unless(count >= 0, empty, "count must not be negative");
 	if (!count) { return empty; }
@@ -40,27 +42,31 @@ The calculation of the length is straight forward. We only have to watch out for
 The result buffer must be one byte bigger to store the terminating null byte.
 <*/
 	char *result = malloc(length + 1);
-	if (!result) {
-		va_end(args2);
-		return_unless(false, empty, "Can't alloc result string");
-	}
 /*>
-In the copy phase, we keep a pointer to the current end of the string and advance it after each copy.
+The `copy_args` function may throw an error. We put it in a different function, so we can free the second argument list, even, if an error is raised.
 <*/
-	char *tail = result;
+	copy_args(result, count, args2);
+	va_end(args2);
+
+	return result ? : empty;
+}
+/*>
+In the copy phase, we copy the current argument and advance the pointer afterwards.
+<*/
+static void copy_args(char *result, int count, va_list args) {
+	return_unless(result,, "can't alloc result string");
+	return_unless(count >= 0,, "count must not be negative");
+
 	for (int i = count; i; --i) {
-		const char *current = va_arg(args2, const char *);
+		const char *current = va_arg(args, const char *);
 		size_t len = current ? strlen(current) : 0;
-		memcpy(tail, current, len);
-		tail += len;
+		memcpy(result, current, len);
+		result += len;
 	}
 /*>
 Don't forget to add the terminating null byte.
 <*/
-	*tail = 0;
-	va_end(args2);
-
-	return result;
+	*result = 0;
 }
 /*>
 ### Special empty string
