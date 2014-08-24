@@ -22,8 +22,7 @@ static void *setup(void *context) {
 }
 
 static void teardown(void *context) {
-	str_lst_free(sl);
-	sl = NULL;
+	sl = str_lst_free(sl);
 }
 /*>
 ### Tests

@@ -15,7 +15,7 @@ First we define an abstract data type and functions to create and destroy instan
 	typedef struct str_lst str_lst;
 
 	str_lst *str_lst_create(int min_capacity);
-	void str_lst_free(str_lst *sl);
+	str_lst *str_lst_free(str_lst *sl);
 ```
 
 ### Accessors
@@ -79,35 +79,53 @@ struct str_lst {
 
 The constructor allocates two chunks of memory: for the list structure itself and to store the string pointers. The minimum capacity is adjusted to a sensible size.
 
+To avoid a memory leak while using the `return_unless` macro, the function is split in two. The adjustment of the pointers will check and fail, if the second memory chunk could not be allocated. If this is the case, the first chunk has to be freed as well.
+
 ``` c
+static bool str_lst_adjust_pointers(str_lst *sl, int capacity);
+
 str_lst *str_lst_create(int min_capacity) {
 	int capacity = MAX(min_capacity, 8);
 	str_lst *sl = malloc(sizeof(str_lst));
 	return_unless(sl, NULL, "no memory for struct");
 	sl->begin = malloc(sizeof(char **) * capacity);
-	if (!sl->begin) {
+	if (!str_lst_adjust_pointers(sl, capacity)) {
 		free(sl);
-		return_unless(false, NULL, "no memory for buffer");
+		sl = NULL;
 	}
-	sl->end = sl->begin;
-	sl->capacity = sl->begin + capacity;
 
 	return sl;
 }
+```
+
+The pointer adjustment checks both memory blocks and adjusts the other pointers of the `str_lst` structure.
+
+``` c
+static bool str_lst_adjust_pointers(str_lst *sl, int capacity) {
+	return_unless(sl, false, "no list");
+	return_unless(sl->begin, false, "no memory for buffer");
+	sl->end = sl->begin;
+	sl->capacity = sl->begin + capacity;
+	return true;
+}
+
 ```
 
 ### Free the list
 
 First every string stored in the list is freed. Then the buffer is freed.  And lastly the list is freed.
 
+This function returns `NULL`, so the return value of this function can be assigned to variable passed, so it doesn't point to a freed memory location.
+
 ``` c
-void str_lst_free(str_lst *sl) {
-	if (!sl) { return; }
+str_lst *str_lst_free(str_lst *sl) {
+	if (!sl) { return NULL; }
 	if (sl->begin) {
 		for (char **i = sl->begin; i != sl->end; ++i) { str_free(*i); }
 		free(sl->begin);
 	}
 	free(sl);
+	return NULL;
 }
 
 ```
@@ -192,8 +210,7 @@ static void *setup(void *context) {
 }
 
 static void teardown(void *context) {
-	str_lst_free(sl);
-	sl = NULL;
+	sl = str_lst_free(sl);
 }
 ```
 

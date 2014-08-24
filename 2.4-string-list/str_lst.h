@@ -15,7 +15,7 @@ First we define an abstract data type and functions to create and destroy instan
 	typedef struct str_lst str_lst;
 
 	str_lst *str_lst_create(int min_capacity);
-	void str_lst_free(str_lst *sl);
+	str_lst *str_lst_free(str_lst *sl);
 /*>
 ### Accessors
 
