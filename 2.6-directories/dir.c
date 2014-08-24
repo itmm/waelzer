@@ -13,32 +13,55 @@ First we need a couple of include files.
 ### Reading the entries
 
 The function opens the directory and creates the return list.
+
+There are three parts, that can fail:
+
+1. opening the directory,
+2. creating the result `str_lst`,
+3. adding entries to the result list.
+
+Therefore this function is split into three functions. The first opens and closes the directory (even, if the rest fails).
 <*/
+static str_lst *read_dir(DIR *dir, entry_filter_fn filter);
+
 str_lst *dir_entries(const char *path, entry_filter_fn filter) {
 	DIR *dir = opendir(path);
 	return_unless(dir, NULL, "can't open dir: %s", strerror(errno));
 
-	str_lst *result = str_lst_create(0);
-	if (!result) {
-		closedir(dir);
-		return NULL;
-	}
+	str_lst *result = read_dir(dir, filter);
+
+	closedir(dir);
+	return result;
+}
 /*>
-Now we iterate over the entries and add them to the result list, if the filter does not reject them.
+The second function creates the result list. If something goes wrong while reading the entries, the list will be freed before returning.
+<*/
+static bool read_dir_entries(DIR *dir, str_lst *result, entry_filter_fn filter);
+
+static str_lst *read_dir(DIR *dir, entry_filter_fn filter) {
+	return_unless(dir, NULL, "no directory");
+	str_lst *result = str_lst_create(0);
+	if (!read_dir_entries(dir, result, filter)) {
+		result = str_lst_free(result);
+	}
+	return result;
+}
+/*>
+The last function iterates over the entries.
+<*/
+static bool read_dir_entries(DIR *dir, str_lst *result, entry_filter_fn filter) {
+	return_unless(dir, false, "no directory");
+	return_unless(result, false, "no result list");
+/*>
+The entries will be added to the result list, if the filter does not reject them.
 <*/
 	struct dirent *entry;
 	while ((entry = readdir(dir))) {
 		if (!filter || filter(entry)) {
-			if (!str_lst_add(result, entry->d_name)) {
-				str_lst_free(result);
-				closedir(dir);
-				return NULL;
-			}
+			return_unless(str_lst_add(result, entry->d_name), false, "can't add entry");
 		}
 	}
-
-	closedir(dir);
-	return result;
+	return true;
 }
 /*>
 ### Helper functions
