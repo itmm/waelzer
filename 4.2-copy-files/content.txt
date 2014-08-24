@@ -1,1 +1,4 @@
+main.c
+read_dirs.c
+process_directory.c
 copy_files.c
