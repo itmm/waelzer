@@ -19,29 +19,29 @@ static void teardown(void *context) {
 #### Can we concatenate a couple of strings?
 <*/
 static void t_simple(void *context) {
-	char *result = str_cons(3, "a", "b", "c");
-	assert_str(result, "abc");
+	str = str_cons(3, "a", "b", "c");
+	assert_str(str, "abc");
 }
 /*>
 #### Even if some entries are `NULL`?
 <*/
 static void t_null_entries(void *context) {
-	char *result = str_cons(5, "a", NULL, "b", NULL, "c");
-	assert_str(result, "abc");
+	str = str_cons(5, "a", NULL, "b", NULL, "c");
+	assert_str(str, "abc");
 }
 /*>
 #### How about zero entries?
 <*/
 static void t_empty(void *context) {
-	char *result = str_cons(0);
-	assert_str(result, "");
+	str = str_cons(0);
+	assert_str(str, "");
 }
 /*>
 #### Or only one `NULL` entry?
 <*/
 static void t_only_NULL(void *context) {
-	char *result = str_cons(1, NULL);
-	assert_str(result, "");
+	str = str_cons(1, NULL);
+	assert_str(str, "");
 }
 /*>
 ### Freeing tests

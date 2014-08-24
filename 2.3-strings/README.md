@@ -164,8 +164,8 @@ static void teardown(void *context) {
 
 ``` c
 static void t_simple(void *context) {
-	char *result = str_cons(3, "a", "b", "c");
-	assert_str(result, "abc");
+	str = str_cons(3, "a", "b", "c");
+	assert_str(str, "abc");
 }
 ```
 
@@ -173,8 +173,8 @@ static void t_simple(void *context) {
 
 ``` c
 static void t_null_entries(void *context) {
-	char *result = str_cons(5, "a", NULL, "b", NULL, "c");
-	assert_str(result, "abc");
+	str = str_cons(5, "a", NULL, "b", NULL, "c");
+	assert_str(str, "abc");
 }
 ```
 
@@ -182,8 +182,8 @@ static void t_null_entries(void *context) {
 
 ``` c
 static void t_empty(void *context) {
-	char *result = str_cons(0);
-	assert_str(result, "");
+	str = str_cons(0);
+	assert_str(str, "");
 }
 ```
 
@@ -191,8 +191,8 @@ static void t_empty(void *context) {
 
 ``` c
 static void t_only_NULL(void *context) {
-	char *result = str_cons(1, NULL);
-	assert_str(result, "");
+	str = str_cons(1, NULL);
+	assert_str(str, "");
 }
 ```
 
